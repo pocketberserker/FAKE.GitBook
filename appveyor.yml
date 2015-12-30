@@ -1,0 +1,33 @@
+version: 0.1.0.{build}
+
+branches:
+  except:
+    - gh-pages
+
+skip_tags: true
+
+skip_commits:
+  message: \[(ci skip|skip ci)\].*
+
+clone_depth: 50
+
+configuration:
+  - Release
+
+cache:
+  - packages -> paket.lock
+  - node_modules
+  - paket-files -> paket.lock
+#  - %APPDATA%\npm-cache
+
+install:
+  - ps: Install-Product node ''
+  - npm install
+
+build_script:
+  - cmd: build.cmd
+  - cmd: doc.cmd
+
+artifacts:
+  - path: gitbook\_book
+
