@@ -58,6 +58,7 @@
   <ItemGroup>
     <None Include="paket.references" />
     <Compile Include="Markdown.fs" />
+    <Compile Include="Transformations.fs" />
     <Compile Include="GitBook.fs" />
     <Compile Include="Helper.fs" />
   </ItemGroup>

@@ -11,19 +11,8 @@ type GitBook private () =
   static let outputFileName (input: FileInfo) =
     input.Name.Replace(input.Extension, ".md")
 
-  static let formattingContext =
-    { TemplateFile = None
-      Replacements = []
-      GenerateLineNumbers = false
-      IncludeSource = false
-      Prefix = "fs"
-      OutputKind = OutputKind.Html
-      GenerateHeaderAnchors = false
-      LayoutRoots = [] }
-
   static let generateOutput outDir outFile (doc: LiterateDocument) =
-    // TODO: fix
-    let doc = Transformations.replaceLiterateParagraphs formattingContext doc
+    let doc = GitBook.Transformations.replaceLiterateParagraphs doc
     if Directory.Exists outDir |> not then
       Directory.CreateDirectory(outDir) |> ignore
       printfn "Creating %s.." outDir
