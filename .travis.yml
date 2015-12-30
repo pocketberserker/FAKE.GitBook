@@ -1,0 +1,29 @@
+language: csharp
+sudo: false
+before_install:
+  - nvm install 4.2.6 && nvm use 4.2.6 && npm install
+cache:
+  directories:
+    - paket-files
+    - packages
+    - node_modules
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8
+      - g++-4.8
+env:
+  global:
+    - CONFIGURATION="Release"
+mono:
+  - latest
+solution: FAKE.GitBook.sln
+before_script:
+  - chmod +x build.sh
+  - chmod +x doc.sh
+script:
+  - ./build.sh
+after_success:
+  - ./doc.sh
