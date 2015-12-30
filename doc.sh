@@ -1,9 +1,31 @@
-#!/bin/bash
-if test "$OS" = "Windows_NT"
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+cd `dirname $0`
+
+FSIARGS=""
+OS=${OS:-"unknown"}
+if [[ "$OS" != "Windows_NT" ]]
 then
-  # use .Net
-  packages/FAKE/tools/FAKE.exe $@ --fsiargs -d:MONO doc.fsx
-else
-  # use mono
-  mono packages/FAKE/tools/FAKE.exe $@ --fsiargs -d:MONO doc.fsx
+  FSIARGS="--fsiargs -d:MONO"
 fi
+
+function run() {
+  if [[ "$OS" != "Windows_NT" ]]
+  then
+    mono "$@"
+  else
+    "$@"
+  fi
+}
+
+if [[ "$OS" != "Windows_NT" ]] &&
+       [ ! -e ~/.config/.mono/certs ]
+then
+  mozroots --import --sync --quiet
+fi
+
+run packages/FAKE/tools/FAKE.exe "$@" $FSIARGS doc.fsx
+
