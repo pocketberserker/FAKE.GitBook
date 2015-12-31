@@ -1,4 +1,5 @@
 #r @"packages/FAKE/tools/FakeLib.dll"
+#r @"packages/FAKE.Persimmon/lib/net451/FAKE.Persimmon.dll"
 open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
@@ -105,6 +106,12 @@ Target "Build" (fun _ ->
     |> ignore
 )
 
+let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
+Target "RunTests" (fun _ ->
+    !! testAssemblies
+    |> Persimmon id
+)
+
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
 
@@ -150,6 +157,7 @@ Target "All" DoNothing
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
+  ==> "RunTests"
   ==> "All"
 
 "All"

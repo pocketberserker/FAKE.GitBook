@@ -7,6 +7,7 @@ nuget FAKE.Lib >= 4.12.0 framework: >= net451
 nuget Nuget.CommandLine
 nuget Persimmon
 nuget FAKE.Persimmon
+nuget Persimmon.Console
 nuget Npm.js
 nuget FSharp.Core
 

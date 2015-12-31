@@ -25,6 +25,7 @@ NUGET
     Octokit (0.17.0)
       Microsoft.Net.Http
     Persimmon (1.0.1)
+    Persimmon.Console (1.0.1)
 GITHUB
   remote: fsharp/FAKE
   specs:
