@@ -38,9 +38,9 @@ let encode x =
 
 let rec formatSpan (ctx:FormattingContext) = function
 | LatexDisplayMath body ->
-  fprintfn ctx.Writer "$$%s%s%s$$" ctx.Newline body ctx.Newline
+  fprintf ctx.Writer "$$%s%s%s$$" ctx.Newline body ctx.Newline
 | LatexInlineMath body ->
-  fprintfn ctx.Writer "$$%s$$" body
+  fprintf ctx.Writer "$$%s$$" body
 | AnchorLink id -> fprintf ctx.Writer "<a name=\"%s\">&#160;</a>" id
 | EmbedSpans cmd -> formatSpans ctx (cmd.Render())
 | Literal str -> ctx.Writer.Write(str)
@@ -91,23 +91,19 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
   match paragraph with
   | LatexBlock lines ->
     let body = String.concat ctx.Newline lines
-    fprintfn ctx.Writer "$$%s%s%s$$" ctx.Newline body ctx.Newline
+    fprintf ctx.Writer "$$%s%s%s$$" ctx.Newline body ctx.Newline
   | EmbedParagraphs cmd -> formatParagraphs ctx (cmd.Render())
   | Heading(n, spans) -> 
     String.replicate n "#" |> fprintf ctx.Writer "%s "
-    // TODO: anchor
     formatSpans ctx spans
   | Paragraph spans ->
-    ctx.LineBreak(); ctx.LineBreak()
-    for span in spans do 
-      formatSpan ctx span
+    formatSpans ctx spans
   | HorizontalRule c ->
     c |> string |> String.replicate 3 |> fprintf ctx.Writer "%s"
-    ctx.LineBreak(); ctx.LineBreak()
   | CodeBlock(code, codeLanguage, _) when String.IsNullOrWhiteSpace(codeLanguage) ->
-    fprintfn ctx.Writer "```%s%s%s```" ctx.Newline code ctx.Newline
+    fprintf ctx.Writer "```%s%s%s```" ctx.Newline code ctx.Newline
   | CodeBlock(code, codeLanguage, _) ->
-    fprintfn ctx.Writer "```%s%s%s%s```" codeLanguage ctx.Newline code ctx.Newline
+    fprintf ctx.Writer "```%s%s%s%s```" codeLanguage ctx.Newline code ctx.Newline
   | TableBlock(headers, alignments, rows) ->
     headers
     |> Option.iter (fun headers ->
@@ -148,11 +144,10 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
       ) 
       if i <> List.length items - 1 then ctx.LineBreak()
   | QuotedBlock body ->
-    for p in body do
+    for i, p in body |> List.mapi (fun i x -> (i, x)) do
       ctx.Writer.Write("> ")
       formatParagraph { ctx with LineBreak = ignore } p
-      ctx.LineBreak()
-    ctx.LineBreak()
+      if i <> List.length body - 1 then ctx.LineBreak()
   | Span spans -> 
     formatSpans ctx spans
   | InlineBlock code ->
