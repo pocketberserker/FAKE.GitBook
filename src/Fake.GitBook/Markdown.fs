@@ -140,14 +140,13 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
       if i <> List.length rows - 1 then ctx.LineBreak()
   | ListBlock(kind, items) ->
     let tag = if kind = Ordered then "1." else "-"
-    for body in items do
+    for i, body in items |> List.mapi (fun i x -> (i, x)) do
       body
       |> List.iter (fun x ->
         fprintf ctx.Writer "%s " tag
         formatParagraph { ctx with LineBreak = ignore } x
-        ctx.LineBreak()
       ) 
-    ctx.LineBreak()
+      if i <> List.length items - 1 then ctx.LineBreak()
   | QuotedBlock body ->
     for p in body do
       ctx.Writer.Write("> ")
