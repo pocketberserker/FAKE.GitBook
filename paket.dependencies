@@ -9,6 +9,6 @@ nuget Persimmon
 nuget FAKE.Persimmon
 nuget Persimmon.Console
 nuget Npm.js
-nuget FSharp.Core
+nuget FSharp.Core >= 4.0.0.1
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
