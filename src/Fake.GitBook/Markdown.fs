@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Text
 open System.Collections.Generic
 open FSharp.Markdown
 open FSharp.Literate
@@ -108,8 +109,35 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
   | CodeBlock(code, codeLanguage, _) ->
     fprintfn ctx.Writer "```%s%s%s%s```" codeLanguage ctx.Newline code ctx.Newline
   | TableBlock(headers, alignments, rows) ->
-    // TODO: implement
-    ctx.Writer.Write(ctx.Newline)
+    headers
+    |> Option.iter (fun headers ->
+      List.zip headers alignments
+      |> List.map (fun (c, a) ->
+        let cell = new StringBuilder()
+        use writer = new StringWriter(cell)
+        for paragraph in c do
+          formatParagraph { ctx with LineBreak = ignore; Writer = writer } paragraph
+        let cell = cell.ToString()
+        let l = String.length cell
+        let align =
+          match a with
+          | AlignLeft -> ":" + String.replicate (l + 1) "-"
+          | AlignRight -> (String.replicate (l + 1) "-") + ":"
+          | AlignCenter -> ":" + (String.replicate l "-") + ":"
+          | AlignDefault -> String.replicate (l + 2) "-"
+        (" " + cell  + " ", align)
+      )
+      |> List.fold (fun (ac, aa) (c, a) -> (ac + "|" + c, aa + "|" + a)) ("", "")
+      |> (fun (h, a) -> fprintfn ctx.Writer "%s|%s%s|" h ctx.Newline a)
+    )
+    for i, row in rows |> List.mapi (fun i x -> (i, x)) do
+      ctx.Writer.Write("|")
+      for cell in row do
+        ctx.Writer.Write(" ")
+        for paragraph in cell do
+          formatParagraph { ctx with LineBreak = ignore } paragraph
+        ctx.Writer.Write(" |")
+      if i <> List.length rows - 1 then ctx.LineBreak()
   | ListBlock(kind, items) ->
     let tag = if kind = Ordered then "1." else "-"
     for body in items do
