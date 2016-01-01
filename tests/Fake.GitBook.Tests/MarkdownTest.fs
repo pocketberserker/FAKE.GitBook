@@ -74,3 +74,15 @@ let a = "a"
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
     do! assertEquals code <| builder.ToString()
   }
+
+  let quoteBlock = """> a
+> b
+"""
+
+  let `` parse and format quote block`` = test {
+    let doc = Literate.ParseMarkdownString(quoteBlock)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals quoteBlock <| builder.ToString()
+  }

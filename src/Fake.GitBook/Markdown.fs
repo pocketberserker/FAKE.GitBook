@@ -145,8 +145,14 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
       if i <> List.length items - 1 then ctx.LineBreak()
   | QuotedBlock body ->
     for i, p in body |> List.mapi (fun i x -> (i, x)) do
-      ctx.Writer.Write("> ")
-      formatParagraph { ctx with LineBreak = ignore } p
+      let builder = StringBuilder()
+      use writer = new StringWriter(builder)
+      formatParagraph { ctx with Writer = writer; LineBreak = ignore } p
+      let sep = [| ctx.Newline |]
+      builder.ToString().Split(sep, StringSplitOptions.None)
+      |> Array.map (fun x -> if String.IsNullOrEmpty x then x else "> " + x)
+      |> String.concat ctx.Newline
+      |> fprintf ctx.Writer "%s"
       if i <> List.length body - 1 then ctx.LineBreak()
   | Span spans -> 
     formatSpans ctx spans
