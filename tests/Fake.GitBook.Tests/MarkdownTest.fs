@@ -86,3 +86,47 @@ let a = "a"
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
     do! assertEquals quoteBlock <| builder.ToString()
   }
+
+  let paragraphs = """one.
+two.
+
+three.
+four.
+"""
+
+  let `` parse and format paragraphs`` = test {
+    let doc = Literate.ParseMarkdownString(paragraphs)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals paragraphs <| builder.ToString()
+  }
+
+  let inlineLatex = "$k_{n+1} = n^2 + k_n^2 - k_{n-1}$"
+
+  let `` parse and format inline latex`` = test {
+    let doc = Literate.ParseMarkdownString(inlineLatex)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals ("$" + inlineLatex + "$" + Environment.NewLine) <| builder.ToString()
+  }
+
+  let displayLatex = """$$$
+A_{m,n} =
+ \begin{pmatrix}
+  a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+  a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+ \end{pmatrix}
+"""
+
+  let `` parse and format display latex`` = test {
+    let doc = Literate.ParseMarkdownString(displayLatex)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    let expected = displayLatex.Replace("$$$", "$$") + "$$" + Environment.NewLine
+    do! assertEquals expected <| builder.ToString()
+  }
