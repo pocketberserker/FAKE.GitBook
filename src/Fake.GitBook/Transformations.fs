@@ -32,22 +32,25 @@ let rec replaceSpecialCodes (formatted:IDictionary<_, _>) = function
   Some(Matching.ParagraphNested(pn, nested))
 | par -> Some par
 
-let rec formatSpans (writer: TextWriter) (newline: string) spans =
+let rec formatSpans (writer: TextWriter) lineBreak spans =
   for span in spans do
     match span with
     | Token(_, value, _) -> writer.Write(value)
     | Error(_, _, body) ->
-      formatSpans writer newline body
+      formatSpans writer lineBreak body
     | Output body -> writer.Write(body)
     | Omitted(_, _) -> ()
-  if not <| List.isEmpty spans then writer.Write(newline)
+  lineBreak ()
 
 let formatLines (newline: string) lines =
   let builder = StringBuilder()
   use writer = new StringWriter(builder)
   fprintfn writer "```fsharp"
-  for Line spans in lines do
-    formatSpans writer newline spans
+  for (i, Line spans) in lines |> Seq.mapi (fun i x -> (i, x)) do
+    let lineBreak =
+      if i = Seq.length lines - 1 then ignore
+      else fun () -> writer.Write(newline)
+    formatSpans writer lineBreak spans
   writer.Write("```")
   builder.ToString()
 

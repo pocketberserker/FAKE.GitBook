@@ -64,6 +64,8 @@ module MarkdownTest =
 
   let code = """```fsharp
 let a = "a"
+
+let b = "b"
 ```
 """
 
@@ -141,4 +143,33 @@ A_{m,n} =
     use writer = new StringWriter(builder)
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
     do! assertEquals quoteList <| builder.ToString()
+  }
+
+  let `` parse and format script`` = test {
+    let markdown = (paragraphs, list) ||> sprintf """%s
+```fsharp
+let a = "a"
+
+let b = "b"```
+
+%s"""
+    let script = (paragraphs, list) ||> sprintf """(**
+
+%s
+*)
+
+let a = "a"
+
+let b = "b"
+
+(**
+
+%s
+*)
+"""
+    let doc = Literate.ParseScriptString(script) |> GitBook.Transformations.replaceLiterateParagraphs
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals markdown <| builder.ToString()
   }
