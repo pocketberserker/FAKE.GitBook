@@ -14,8 +14,12 @@ type OutputFormat =
   member this.Command(dir) =
     match this with
     | Html -> sprintf "build %s" dir
-    | Pdf name -> sprintf "pdf %s %s" dir (dir @@ name)
-    | EPub name -> sprintf "epub %s %s" dir (dir @@ name)
+    | Pdf name ->
+      let name = name.Replace(".pdf", "")
+      sprintf "pdf %s %s.pdf" dir (dir @@ name)
+    | EPub name ->
+      let name = name.Replace(".epub", "")
+      sprintf "epub %s %s.epub" dir (dir @@ name)
 
 type GitBookParams = {
   ToolPath: string
