@@ -9,11 +9,13 @@ open FSharp.Literate
 
 type OutputFormat =
   | Html
+  | Json
   | Pdf of string
   | EPub of string
   member this.Command(dir) =
     match this with
     | Html -> sprintf "build %s" dir
+    | Json -> sprintf "build %s --format:json" dir
     | Pdf name ->
       let name = name.Replace(".pdf", "")
       sprintf "pdf %s %s.pdf" dir (dir @@ name)
