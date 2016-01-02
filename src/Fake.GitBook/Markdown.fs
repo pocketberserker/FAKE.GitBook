@@ -147,13 +147,12 @@ let rec formatParagraph (ctx:FormattingContext) paragraph =
     for i, p in body |> List.mapi (fun i x -> (i, x)) do
       let builder = StringBuilder()
       use writer = new StringWriter(builder)
-      formatParagraph { ctx with Writer = writer; LineBreak = ignore } p
+      formatParagraph { ctx with Writer = writer; LineBreak = fun () -> writer.Write(ctx.Newline) } p
       let sep = [| ctx.Newline |]
-      builder.ToString().Split(sep, StringSplitOptions.None)
+      builder.ToString().TrimEnd(ctx.Newline.ToCharArray()).Split(sep, StringSplitOptions.None)
       |> Array.map (fun x -> if String.IsNullOrEmpty x then x else "> " + x)
       |> String.concat ctx.Newline
       |> fprintf ctx.Writer "%s"
-      if i <> List.length body - 1 then ctx.LineBreak()
   | Span spans -> 
     formatSpans ctx spans
   | InlineBlock code ->

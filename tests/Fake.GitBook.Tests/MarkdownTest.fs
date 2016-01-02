@@ -130,3 +130,15 @@ A_{m,n} =
     let expected = displayLatex.Replace("$$$", "$$") + "$$" + Environment.NewLine
     do! assertEquals expected <| builder.ToString()
   }
+
+  let quoteList = """> 1. a
+> 1. b
+"""
+
+  let `` parse and format quote and list`` = test {
+    let doc = Literate.ParseMarkdownString(quoteList)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals quoteList <| builder.ToString()
+  }
