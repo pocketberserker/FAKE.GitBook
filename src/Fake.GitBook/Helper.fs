@@ -49,19 +49,23 @@ let buildGitBookArgs parameters (format: OutputFormat) =
   |> appendWithoutQuotes (format.Command(parameters.BookBuildDir))
   |> toText
 
-let GitBookOnly setParams format =
-  traceStartTask "gitbook" ""
-  let parameters = setParams GitBookDefaults
-  let args = buildGitBookArgs parameters format
-  trace (parameters.ToolPath + " " + args)
-  if 0 <> ExecProcess (fun info -> 
-    info.FileName <- parameters.ToolPath
-    info.Arguments <- args) TimeSpan.MaxValue
-  then 
-    failwithf "Failed: gitbook %s" args
-  traceEndTask "gitbook" ""
+let GitBookOnly setParams formats =
+  let inner format =
+    traceStartTask "gitbook" ""
+    let parameters = setParams GitBookDefaults
+    let args = buildGitBookArgs parameters format
+    trace (parameters.ToolPath + " " + args)
+    if 0 <> ExecProcess (fun info -> 
+      info.FileName <- parameters.ToolPath
+      info.Arguments <- args) TimeSpan.MaxValue
+    then 
+      failwithf "Failed: gitbook %s" args
+    traceEndTask "gitbook" ""
+  if List.isEmpty formats then failwith "require one or more output formats"
+  List.iter inner formats
 
-let GitBook setNpmParams setParams format =
+let GitBook setNpmParams setParams formats =
+  if List.isEmpty formats then failwith "require one or more output formats"
   if not <| directoryExists defaultNodeModulesPath then
     Npm (fun p ->
       { setNpmParams p with
@@ -72,4 +76,4 @@ let GitBook setNpmParams setParams format =
   match parameters.FsiEvaluator with
   | Some fsi -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir, fsi)
   | None -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir)
-  GitBookOnly setParams format
+  GitBookOnly setParams formats

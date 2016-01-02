@@ -4,7 +4,7 @@
 open Fake
 
 Target "GenerateBook" (fun _ ->
-  GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) Html
+  GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) [Html]
 )
 
 RunTargetOrDefault "GenerateBook"
