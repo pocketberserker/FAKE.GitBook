@@ -197,6 +197,8 @@ gitbook/_book
 gitbook/book.epub
 gitbook/book.pdf
 gitbook/*.md
+gitbook/en
+gitbook/ja
 
 ### npm ###
 node_modules
