@@ -194,8 +194,8 @@ paket-files
 
 ### gitbook ###
 gitbook/_book
-gitbook/book.epub
-gitbook/book.pdf
+gitbook/*.epub
+gitbook/*.pdf
 gitbook/*.md
 gitbook/en
 gitbook/ja

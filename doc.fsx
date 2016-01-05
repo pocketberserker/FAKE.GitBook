@@ -3,9 +3,13 @@
 #r @"bin/Fake.GitBook/Fake.GitBook.dll"
 open Fake
 
-Target "GenerateBook" (fun _ ->
+Target "Generate" (fun _ ->
   GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) [Html]
 )
 
-RunTargetOrDefault "GenerateBook"
+Target "GenerateAll" (fun _ ->
+  GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) [ Html; Pdf "book"; EPub "book" ]
+)
+
+RunTargetOrDefault "Generate"
 

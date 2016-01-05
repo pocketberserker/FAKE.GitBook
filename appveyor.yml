@@ -23,11 +23,17 @@ cache:
 install:
   - ps: Install-Product node ''
   - npm install
+  - choco install calibre
+  - cmd: set PATH=%PATH%;C:\Program Files\Calibre2\
 
 build_script:
   - cmd: build.cmd
-  - cmd: doc.cmd
+  - cmd: doc.cmd GenerateAll
 
 artifacts:
   - path: gitbook\_book
+  - path: gitbook\book_en.pdf
+  - path: gitbook\book_ja.pdf
+  - path: gitbook\book_en.epub
+  - path: gitbook\book_ja.epub
 
