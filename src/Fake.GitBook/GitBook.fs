@@ -59,5 +59,5 @@ type GitBook private () =
     let inputDir = Path.GetFullPath(inputDir)
     for file in getFiles [| "*.fsx"; "*.md" |] do
       let file = FileInfo(file)
-      let outDir = Path.Combine(outDir, file.DirectoryName.Replace(inputDir, ""))
+      let outDir = Path.Combine(outDir, file.DirectoryName.Replace(inputDir, "").TrimStart('/', '\\'))
       GitBook.GenerateFromFile(file, outDir, ?fsiEvaluator = fsiEvaluator)
