@@ -20,29 +20,29 @@ type GitBook private () =
     Markdown.formatMarkdown w Environment.NewLine doc.DefinedLinks doc.Paragraphs
 
   static let getFromScriptString fsxFile fsiEvaluator fsx =
-    Literate.ParseScriptString(fsx, ?path = Option.map Path.GetFullPath fsxFile, ?fsiEvaluator = fsiEvaluator) 
+    Literate.ParseScriptString(fsx, ?path = Option.map Path.GetFullPath fsxFile, ?fsiEvaluator = fsiEvaluator)
 
   static let getFromMarkdownString mdFile fsiEvaluator md =
-    Literate.ParseMarkdownString(md, ?path = Option.map Path.GetFullPath mdFile, ?fsiEvaluator = fsiEvaluator) 
+    Literate.ParseMarkdownString(md, ?path = Option.map Path.GetFullPath mdFile, ?fsiEvaluator = fsiEvaluator)
 
   static let checkIfFileExistsAndRun file f =
     if File.Exists(file) then f ()
     else failwithf "%s does not exist" file
-          
+
   static member GenerateOutputFromScriptFile(fsxFile, outDir, ?fsiEvaluator) =
     checkIfFileExistsAndRun fsxFile (fun () ->
       fsxFile
       |> File.ReadAllText
       |> getFromScriptString (Some fsxFile) fsiEvaluator
       |> generateOutput outDir (outputFileName (FileInfo fsxFile)))
-    
+
   static member GenerateOutputFromMarkdownFile(mdFile, outDir, ?fsiEvaluator) =
     checkIfFileExistsAndRun mdFile (fun () ->
       mdFile
       |> File.ReadAllText
-      |> getFromMarkdownString  (Some mdFile) fsiEvaluator 
+      |> getFromMarkdownString  (Some mdFile) fsiEvaluator
       |> generateOutput outDir (outputFileName (FileInfo mdFile)))
-    
+
   static member GenerateFromFile(fileName, outDir, ?fsiEvaluator) =
     let file = FileInfo fileName
     match file.Extension with
