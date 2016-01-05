@@ -1,6 +1,6 @@
 #r @"packages/FAKE/tools/FakeLib.dll"
-#I @"src/Fake.GitBook/bin/Release"
-#r @"src/Fake.GitBook/bin/Release/Fake.GitBook.dll"
+#I @"bin/Fake.GitBook"
+#r @"bin/Fake.GitBook/Fake.GitBook.dll"
 open Fake
 
 Target "GenerateBook" (fun _ ->
