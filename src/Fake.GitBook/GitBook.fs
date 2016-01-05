@@ -13,7 +13,7 @@ type GitBook private () =
 
   static let generateOutput outDir outFile (doc: LiterateDocument) =
     let doc = GitBook.Transformations.replaceLiterateParagraphs doc
-    if Directory.Exists outDir |> not then
+    if Directory.Exists(outDir) |> not then
       Directory.CreateDirectory(outDir) |> ignore
       printfn "Creating %s.." outDir
     use w = new StreamWriter(Path.Combine(outDir, outFile))
@@ -34,22 +34,29 @@ type GitBook private () =
       fsxFile
       |> File.ReadAllText
       |> getFromScriptString (Some fsxFile) fsiEvaluator
-      |> generateOutput outDir (outputFileName (FileInfo fsxFile)))
+      |> generateOutput outDir (outputFileName (FileInfo(fsxFile))))
 
   static member GenerateOutputFromMarkdownFile(mdFile, outDir, ?fsiEvaluator) =
     checkIfFileExistsAndRun mdFile (fun () ->
       mdFile
       |> File.ReadAllText
-      |> getFromMarkdownString  (Some mdFile) fsiEvaluator
-      |> generateOutput outDir (outputFileName (FileInfo mdFile)))
+      |> getFromMarkdownString (Some mdFile) fsiEvaluator
+      |> generateOutput outDir (outputFileName (FileInfo(mdFile))))
 
-  static member GenerateFromFile(fileName, outDir, ?fsiEvaluator) =
-    let file = FileInfo fileName
+  static member GenerateFromFile(file: FileInfo, outDir, ?fsiEvaluator) =
     match file.Extension with
     | ".md" -> GitBook.GenerateOutputFromMarkdownFile(file.FullName, outDir, ?fsiEvaluator = fsiEvaluator)
     | ".fsx" -> GitBook.GenerateOutputFromScriptFile(file.FullName, outDir, ?fsiEvaluator = fsiEvaluator)
-    | _ -> failwithf "%s does not support" fileName
+    | _ -> failwithf "%s does not support" file.FullName
+
+  static member GenerateFromFile(fileName, outDir, ?fsiEvaluator) =
+    GitBook.GenerateFromFile(FileInfo(fileName), outDir, ?fsiEvaluator = fsiEvaluator)
 
   static member Generate(inputDir, outDir, ?fsiEvaluator) =
-    for file in Array.append (Directory.GetFiles(inputDir, "*.fsx")) (Directory.GetFiles(inputDir, "*.md")) do
+    let getFiles targets =
+      targets
+      |> Array.collect (fun t -> Directory.GetFiles(inputDir, t, SearchOption.AllDirectories))
+    for file in getFiles [| "*.fsx"; "*.md" |] do
+      let file = FileInfo(file)
+      let outDir = Path.Combine(outDir, file.DirectoryName.Replace(Path.GetFullPath(inputDir).TrimEnd('/'), "").TrimStart('/'))
       GitBook.GenerateFromFile(file, outDir, ?fsiEvaluator = fsiEvaluator)
