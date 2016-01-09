@@ -1,11 +1,13 @@
 #r @"packages/FAKE/tools/FakeLib.dll"
 #r @"packages/FAKE.Persimmon/lib/net451/FAKE.Persimmon.dll"
+#load @"./Project.fsx"
 open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
 open System
 open System.IO
+open Project
 
 let project = "FAKE.GitBook"
 
@@ -25,14 +27,6 @@ let tags = "fsharp build fake"
 
 // File system information
 let solutionFile  = "FAKE.GitBook.sln"
-
-// Git configuration (used for publishing documentation in gh-pages branch)
-// The profile where the project is posted
-let gitOwner = "pocketberserker"
-let gitHome = "https://github.com/" + gitOwner
-
-// The name of the project on GitHub
-let gitName = "FAKE.GitBook"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/pocketberserker"
