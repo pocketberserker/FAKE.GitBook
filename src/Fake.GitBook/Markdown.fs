@@ -13,29 +13,6 @@ type FormattingContext =
     Writer : TextWriter
     Links : IDictionary<string, string * option<string>> }
 
-let specialChars = [|
-  "*"
-  "\\"
-  "`"
-  "_"
-  "{"
-  "}"
-  "["
-  "]" 
-  "("
-  ")"
-  ">"
-  "#"
-  "."
-  "!"
-  "+"
-  "-"
-  "$"
-|]
-
-let encode x =
-  specialChars |> Array.fold (fun (acc:string) k -> acc.Replace(k, "\\" + k)) x
-
 let rec formatSpan (ctx:FormattingContext) = function
 | LatexDisplayMath body ->
   fprintf ctx.Writer "$$%s%s%s$$" ctx.Newline body ctx.Newline
@@ -74,7 +51,7 @@ let rec formatSpan (ctx:FormattingContext) = function
   formatSpans ctx body
   ctx.Writer.Write("**")
 | InlineCode(body) -> 
-  encode body |> fprintf ctx.Writer "`%s`"
+  body |> fprintf ctx.Writer "`%s`"
 | Emphasis(body) -> 
   ctx.Writer.Write("*")
   formatSpans ctx body
