@@ -34,7 +34,7 @@ type GitBookParams = {
 let defaultBookBuilderDir = currentDirectory @@ "gitbook"
 let defaultNodeModulesPath = currentDirectory @@ "node_modules"
 
-let GitBookDefaults = {
+let GitBookDefaults () = {
   ToolPath =
     let name = if isUnix then "gitbook" else "gitbook.cmd"
     findToolInSubPath name defaultNodeModulesPath
@@ -52,7 +52,7 @@ let buildGitBookArgs parameters (format: OutputFormat) =
 let GitBookOnly setParams formats =
   let inner format =
     traceStartTask "gitbook" ""
-    let parameters = setParams GitBookDefaults
+    let parameters = setParams <| GitBookDefaults ()
     let args = buildGitBookArgs parameters format
     trace (parameters.ToolPath + " " + args)
     if 0 <> ExecProcess (fun info -> 
@@ -72,7 +72,7 @@ let GitBook setNpmParams setParams formats =
          Command = Install Standard
          WorkingDirectory = currentDirectory
       })
-  let parameters = setParams GitBookDefaults
+  let parameters = setParams <| GitBookDefaults ()
   match parameters.FsiEvaluator with
   | Some fsi -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir, fsi)
   | None -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir)
