@@ -6,12 +6,14 @@ open Fake
 open Fake.Git
 open Project
 
+let srcDir = currentDirectory @@ "docs"
+
 Target "Generate" (fun _ ->
-  GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) [Html]
+  GitBook id (fun p -> { p with SrcDir = srcDir }) [Html]
 )
 
 Target "GenerateAll" (fun _ ->
-  GitBook id (fun p -> { p with SrcDir = currentDirectory @@ "doc" }) [ Html; Pdf "book"; EPub "book" ]
+  GitBook id (fun p -> { p with SrcDir = srcDir }) [ Html; Pdf "book"; EPub "book" ]
 )
 
 Target "ReleaseDocs" (fun () ->
