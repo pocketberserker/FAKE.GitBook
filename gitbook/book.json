@@ -6,6 +6,7 @@
   "plugins": [
     "include-codeblock",
     "japanese-support",
-    "footnote-string-to-number"
+    "footnote-string-to-number",
+    "katex"
   ]
 }
