@@ -57,7 +57,7 @@
         data-chapter-title="Quick Start"
         data-filepath="QuickStart.md"
         data-basepath="."
-        data-revision="Sun Jan 10 2016 17:54:06 GMT+0900 (東京 (標準時))"
+        data-revision="Mon Jan 11 2016 13:20:46 GMT+0900 (東京 (標準時))"
         data-innerlanguage="en">
     
 
@@ -151,6 +151,71 @@
                     
                         <h1 id="quick-start">Quick Start</h1>
 <p>To use FAKE.GitBook, we can generate a document <a href="https://github.com/GitbookIO/gitbook" target="_blank">GitBook</a>.</p>
+<h2 id="installing-dependencies">Installing dependencies</h2>
+<p>Show an example to install FAKE and FAKE.GitBook using <a href="https://fsprojects.github.io/Paket/index.html" target="_blank">Paket</a>&#x3002;</p>
+<p>Create a <code>paket.dependencies</code> file in your project&apos;s root and specify some dependencies in it.
+If you don&apos;t install <code>npm</code>, you need to add <code>Npm.js</code> depencencies&#x3002;</p>
+<pre><code class="lang-fsharp">source https:<span class="hljs-comment">//api.nuget.org/v3/index.json</span>
+source https:<span class="hljs-comment">//nuget.org/api/v2</span>
+
+nuget FAKE
+nuget FAKE.GitBook
+nuget Npm.js <span class="hljs-comment">// if you don&apos;t install npm</span>
+</code></pre>
+<p>Install dependencies referring to <a href="https://fsprojects.github.io/Paket/getting-started.html" target="_blank">Paket - Getting Started</a>.</p>
+<h2 id="pakagejson">pakage.json</h2>
+<p>Create a <code>package.json</code> file in your project&apos;s root.</p>
+<pre><code class="lang-fsharp">{
+  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;sample-book&quot;</span>,
+  <span class="hljs-string">&quot;private&quot;</span>: <span class="hljs-keyword">true</span>,
+  <span class="hljs-string">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+  <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;gitbook sample&quot;</span>,
+  <span class="hljs-string">&quot;scripts&quot;</span>: {
+    <span class="hljs-string">&quot;prepublish&quot;</span>: <span class="hljs-string">&quot;gitbook install&quot;</span>
+  },
+  <span class="hljs-string">&quot;devDependencies&quot;</span>: {
+    <span class="hljs-string">&quot;gitbook-cli&quot;</span>: <span class="hljs-string">&quot;^1.0.0&quot;</span>,
+    <span class="hljs-string">&quot;gitbook-plugin-include-codeblock&quot;</span>: <span class="hljs-string">&quot;^1.5.0&quot;</span>
+  }
+}
+</code></pre>
+<h2 id="the-build-script">The build script</h2>
+<p>Create a <code>build.fsx</code> file in your project&apos;s root and write codes to load libraries.</p>
+<pre><code class="lang-fsharp">#r <span class="hljs-string">@&quot;packages/FAKE/tools/FakeLib.dll&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharp.Formatting/lib/net40&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharp.Compiler.Service/lib/net40&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharpVSPowerTools.Core/lib/net45&quot;</span>
+#r <span class="hljs-string">@&quot;packages/FAKE.GitBook/lib/net451/Fake.GitBook.dll&quot;</span>
+</code></pre>
+<p>And define a target.</p>
+<pre><code class="lang-fsharp"><span class="hljs-keyword">open</span> Fake
+
+Target <span class="hljs-string">&quot;Generate&quot;</span> (<span class="hljs-keyword">fun</span> _ -&gt;
+  GitBook id id [Html]
+)
+
+RunTargetOrDefault <span class="hljs-string">&quot;Generate&quot;</span>
+</code></pre>
+<h2 id="bookjson">book.json</h2>
+<p>Create a <code>book.json</code> file in <code>gitbook</code> directory.</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">&quot;structure&quot;</span>: {
+    <span class="hljs-string">&quot;readme&quot;</span>: <span class="hljs-string">&quot;INTRODUCTION.md&quot;</span>,
+    <span class="hljs-string">&quot;summary&quot;</span>: <span class="hljs-string">&quot;SUMMARY.md&quot;</span>
+  },
+  <span class="hljs-string">&quot;plugins&quot;</span>: [
+    <span class="hljs-string">&quot;include-codeblock&quot;</span>
+  ]
+}
+</code></pre>
+<h2 id="writing-documents">Writing documents</h2>
+<p>Write some documents using FSharp.Formatting style.</p>
+<h2 id="running">Running</h2>
+<p>Run the command below:</p>
+<pre><code class="lang-powershell">packages\FAKE\tools\Fake.exe build.fsx
+</code></pre>
+<h2 id="sample-porject">Sample porject</h2>
+<p>See also <a href="https://github.com/pocketberserker/FAKE.GitBook.Sample" target="_blank">FAKE.GitBook.Sample</a>.</p>
 
                     
                     </section>

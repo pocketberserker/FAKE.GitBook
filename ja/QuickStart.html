@@ -57,7 +57,7 @@
         data-chapter-title="クイックスタート"
         data-filepath="QuickStart.md"
         data-basepath="."
-        data-revision="Sun Jan 10 2016 17:54:07 GMT+0900 (東京 (標準時))"
+        data-revision="Mon Jan 11 2016 13:20:47 GMT+0900 (東京 (標準時))"
         data-innerlanguage="ja">
     
 
@@ -151,6 +151,73 @@
                     
                         <h1 id="&#x30AF;&#x30A4;&#x30C3;&#x30AF;&#x30B9;&#x30BF;&#x30FC;&#x30C8;">&#x30AF;&#x30A4;&#x30C3;&#x30AF;&#x30B9;&#x30BF;&#x30FC;&#x30C8;</h1>
 <p>FAKE.GitBook&#x3092;&#x4F7F;&#x3046;&#x3053;&#x3068;&#x3067;&#x3001;<a href="http://tpetricek.github.io/FSharp.Formatting/" target="_blank">FSharp.Formatting</a>&#x30B9;&#x30BF;&#x30A4;&#x30EB;&#x3067;&#x66F8;&#x3044;&#x305F;&#x30C9;&#x30AD;&#x30E5;&#x30E1;&#x30F3;&#x30C8;&#x3092;<a href="https://github.com/GitbookIO/gitbook" target="_blank">GitBook</a>&#x3067;&#x51FA;&#x529B;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;</p>
+<h2 id="&#x4F9D;&#x5B58;&#x95A2;&#x4FC2;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;">&#x4F9D;&#x5B58;&#x95A2;&#x4FC2;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;</h2>
+<p><a href="https://fsprojects.github.io/Paket/index.html" target="_blank">Paket</a>&#x3092;&#x4F7F;&#x3063;&#x3066;FAKE&#x3068;FAKE.GitBook&#x3092;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3059;&#x308B;&#x4F8B;&#x3092;&#x793A;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<p>&#x30D7;&#x30ED;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x30EB;&#x30FC;&#x30C8;&#x306B;<code>paket.dependencies</code>&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x3001;&#x4F9D;&#x5B58;&#x95A2;&#x4FC2;&#x3092;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;
+<code>npm</code>&#x3092;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3057;&#x3066;&#x3044;&#x306A;&#x3044;&#x5834;&#x5408;&#x306F;&#x3001;<code>Npm.js</code>&#x3092;&#x4F9D;&#x5B58;&#x95A2;&#x4FC2;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&#x3002;</p>
+<pre><code class="lang-fsharp">source https:<span class="hljs-comment">//api.nuget.org/v3/index.json</span>
+source https:<span class="hljs-comment">//nuget.org/api/v2</span>
+
+nuget FAKE
+nuget FAKE.GitBook
+nuget Npm.js <span class="hljs-comment">// if you don&apos;t install npm</span>
+</code></pre>
+<p><a href="https://fsprojects.github.io/Paket/getting-started.html" target="_blank">Paket - Getting Started</a>&#x3092;&#x53C2;&#x8003;&#x306B;&#x3001;&#x4F9D;&#x5B58;&#x95A2;&#x4FC2;&#x3092;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+<h2 id="pakagejson">pakage.json</h2>
+<p>&#x30D7;&#x30ED;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x30EB;&#x30FC;&#x30C8;&#x306B;<code>package.json</code>&#x3092;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+<pre><code class="lang-fsharp">{
+  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;sample-book&quot;</span>,
+  <span class="hljs-string">&quot;private&quot;</span>: <span class="hljs-keyword">true</span>,
+  <span class="hljs-string">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+  <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;gitbook sample&quot;</span>,
+  <span class="hljs-string">&quot;scripts&quot;</span>: {
+    <span class="hljs-string">&quot;prepublish&quot;</span>: <span class="hljs-string">&quot;gitbook install&quot;</span>
+  },
+  <span class="hljs-string">&quot;devDependencies&quot;</span>: {
+    <span class="hljs-string">&quot;gitbook-cli&quot;</span>: <span class="hljs-string">&quot;^1.0.0&quot;</span>,
+    <span class="hljs-string">&quot;gitbook-plugin-include-codeblock&quot;</span>: <span class="hljs-string">&quot;^1.5.0&quot;</span>,
+    <span class="hljs-string">&quot;gitbook-plugin-japanese-support&quot;</span>: <span class="hljs-string">&quot;0.0.1&quot;</span>
+  }
+}
+</code></pre>
+<h2 id="&#x30D3;&#x30EB;&#x30C9;&#x30B9;&#x30AF;&#x30EA;&#x30D7;&#x30C8;">&#x30D3;&#x30EB;&#x30C9;&#x30B9;&#x30AF;&#x30EA;&#x30D7;&#x30C8;</h2>
+<p>&#x307E;&#x305A;&#x3001;&#x30E9;&#x30A4;&#x30D6;&#x30E9;&#x30EA;&#x3092;&#x30ED;&#x30FC;&#x30C9;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<pre><code class="lang-fsharp">#r <span class="hljs-string">@&quot;packages/FAKE/tools/FakeLib.dll&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharp.Formatting/lib/net40&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharp.Compiler.Service/lib/net40&quot;</span>
+#I <span class="hljs-string">&quot;packages/FSharpVSPowerTools.Core/lib/net45&quot;</span>
+#r <span class="hljs-string">@&quot;packages/FAKE.GitBook/lib/net451/Fake.GitBook.dll&quot;</span>
+</code></pre>
+<p>&#x30BF;&#x30FC;&#x30B2;&#x30C3;&#x30C8;&#x3092;&#x5B9A;&#x7FA9;&#x3057;&#x307E;&#x3059;&#x3002;</p>
+<pre><code class="lang-fsharp"><span class="hljs-keyword">open</span> Fake
+
+Target <span class="hljs-string">&quot;Generate&quot;</span> (<span class="hljs-keyword">fun</span> _ -&gt;
+  GitBook id id [Html]
+)
+
+RunTargetOrDefault <span class="hljs-string">&quot;Generate&quot;</span>
+</code></pre>
+<h2 id="bookjson">book.json</h2>
+<p><code>gitbook</code>&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306B;<code>book.json</code>&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+<pre><code class="lang-json">{
+  <span class="hljs-string">&quot;structure&quot;</span>: {
+    <span class="hljs-string">&quot;readme&quot;</span>: <span class="hljs-string">&quot;INTRODUCTION.md&quot;</span>,
+    <span class="hljs-string">&quot;summary&quot;</span>: <span class="hljs-string">&quot;SUMMARY.md&quot;</span>
+  },
+  <span class="hljs-string">&quot;plugins&quot;</span>: [
+    <span class="hljs-string">&quot;include-codeblock&quot;</span>,
+    <span class="hljs-string">&quot;japanese-support&quot;</span>
+  ]
+}
+</code></pre>
+<h2 id="&#x30C9;&#x30AD;&#x30E5;&#x30E1;&#x30F3;&#x30C8;&#x306E;&#x4F5C;&#x6210;">&#x30C9;&#x30AD;&#x30E5;&#x30E1;&#x30F3;&#x30C8;&#x306E;&#x4F5C;&#x6210;</h2>
+<p>FSharp.Formatting&#x30B9;&#x30BF;&#x30A4;&#x30EB;&#x3067;&#x30C9;&#x30AD;&#x30E5;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x66F8;&#x3044;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+<h2 id="&#x5B9F;&#x884C;">&#x5B9F;&#x884C;</h2>
+<p>&#x6B21;&#x306E;&#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+<pre><code class="lang-powershell">packages\FAKE\tools\Fake.exe build.fsx
+</code></pre>
+<h2 id="&#x30B5;&#x30F3;&#x30D7;&#x30EB;&#x30D7;&#x30ED;&#x30B8;&#x30A7;&#x30AF;&#x30C8;">&#x30B5;&#x30F3;&#x30D7;&#x30EB;&#x30D7;&#x30ED;&#x30B8;&#x30A7;&#x30AF;&#x30C8;</h2>
+<p><a href="https://github.com/pocketberserker/FAKE.GitBook.Sample" target="_blank">FAKE.GitBook.Sample</a>&#x3092;&#x53C2;&#x8003;&#x306B;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
 
                     
                     </section>
