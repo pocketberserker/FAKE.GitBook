@@ -1,3 +1,6 @@
+### 0.1.1 - January 11 2016
+* support footnotes
+
 ### 0.1.0 - January 11 2016
 * support nested directories
 * delay to search gitbook tool path
