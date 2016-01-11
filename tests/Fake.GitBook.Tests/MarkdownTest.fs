@@ -62,22 +62,22 @@ module MarkdownTest =
     do! assertEquals table <| builder.ToString()
   }
 
-  let code = """```fsharp
+  let fsharpCode = """```fsharp
 let a = "a"
 
 let b = "b"
 ```
 """
 
-  let `` parse and format code`` = test {
-    let doc = Literate.ParseMarkdownString(code) |> GitBook.Transformations.replaceLiterateParagraphs false
+  let `` parse and format F# code`` = test {
+    let doc = Literate.ParseMarkdownString(fsharpCode) |> GitBook.Transformations.replaceLiterateParagraphs false
     let builder = StringBuilder()
     use writer = new StringWriter(builder)
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
-    do! assertEquals code <| builder.ToString()
+    do! assertEquals fsharpCode <| builder.ToString()
   }
 
-  let `` parse and format code with tips`` = test {
+  let `` parse and format F# code with tips`` = test {
     let code = """```fsharp
 let a = "a"
 
@@ -105,6 +105,20 @@ let rec c n =
   else c (n - 1)
 ```
 """
+    do! assertEquals code <| builder.ToString()
+  }
+
+  let `` parse and format other language code`` = test {
+    let code = """```scala
+val a = "a"
+
+val b = "b"
+```
+"""
+    let doc = Literate.ParseMarkdownString(code) |> GitBook.Transformations.replaceLiterateParagraphs true
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
     do! assertEquals code <| builder.ToString()
   }
 

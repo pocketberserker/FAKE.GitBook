@@ -24,8 +24,7 @@ let rec replaceSpecialCodes (formatted:IDictionary<_, _>) = function
     let builder = StringBuilder()
     use writer = new StringWriter(builder)
     fprintfn writer "```%s" lang
-    fprintfn writer "%s" code
-    writer.Write("```")
+    fprintf writer "%s```" code
     Some(InlineBlock(builder.ToString()))
 | Matching.ParagraphNested(pn, nested) ->
   let nested = List.map (List.choose (replaceSpecialCodes formatted)) nested
