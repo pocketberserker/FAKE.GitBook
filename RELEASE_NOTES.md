@@ -1,3 +1,8 @@
+### 0.1.0 - January 11 2016
+* support nested directories
+* delay to search gitbook tool path
+* add generate tips option
+
 ### 0.0.2 - January 2 2016
 * fix some line break bug
 * generate multiple output formats
