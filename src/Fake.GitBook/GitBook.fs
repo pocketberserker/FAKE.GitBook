@@ -29,26 +29,32 @@ type GitBook private () =
     if File.Exists(file) then f ()
     else failwithf "%s does not exist" file
 
-  static member GenerateOutputFromScriptFile(fsxFile, outDir, ?generateTips, ?fsiEvaluator) =
+  static member GenerateOutputFromScriptFile(fsxFile: FileInfo, outDir, ?generateTips, ?fsiEvaluator) =
     let generateTips = defaultArg generateTips true
-    checkIfFileExistsAndRun fsxFile (fun () ->
-      fsxFile
+    checkIfFileExistsAndRun fsxFile.FullName (fun () ->
+      fsxFile.FullName
       |> File.ReadAllText
-      |> getFromScriptString (Some fsxFile) fsiEvaluator
-      |> generateOutput outDir (outputFileName (FileInfo(fsxFile))) generateTips)
+      |> getFromScriptString (Some fsxFile.FullName) fsiEvaluator
+      |> generateOutput outDir (outputFileName fsxFile) generateTips)
+
+  static member GenerateOutputFromScriptFile(fsxFile, outDir, ?generateTips, ?fsiEvaluator) =
+    GitBook.GenerateOutputFromScriptFile(FileInfo(fsxFile), outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
+
+  static member GenerateOutputFromMarkdownFile(mdFile: FileInfo, outDir, ?generateTips, ?fsiEvaluator) =
+    let generateTips = defaultArg generateTips true
+    checkIfFileExistsAndRun mdFile.FullName (fun () ->
+      mdFile.FullName
+      |> File.ReadAllText
+      |> getFromMarkdownString (Some mdFile.FullName) fsiEvaluator
+      |> generateOutput outDir (outputFileName mdFile) generateTips)
 
   static member GenerateOutputFromMarkdownFile(mdFile, outDir, ?generateTips, ?fsiEvaluator) =
-    let generateTips = defaultArg generateTips true
-    checkIfFileExistsAndRun mdFile (fun () ->
-      mdFile
-      |> File.ReadAllText
-      |> getFromMarkdownString (Some mdFile) fsiEvaluator
-      |> generateOutput outDir (outputFileName (FileInfo(mdFile))) generateTips)
+    GitBook.GenerateOutputFromMarkdownFile(FileInfo(mdFile), outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
 
   static member GenerateFromFile(file: FileInfo, outDir, ?generateTips, ?fsiEvaluator) =
     match file.Extension with
-    | ".md" -> GitBook.GenerateOutputFromMarkdownFile(file.FullName, outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
-    | ".fsx" -> GitBook.GenerateOutputFromScriptFile(file.FullName, outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
+    | ".md" -> GitBook.GenerateOutputFromMarkdownFile(file, outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
+    | ".fsx" -> GitBook.GenerateOutputFromScriptFile(file, outDir, ?generateTips = generateTips, ?fsiEvaluator = fsiEvaluator)
     | _ -> failwithf "%s does not support" file.FullName
 
   static member GenerateFromFile(fileName, outDir, ?generateTips, ?fsiEvaluator) =
