@@ -22,6 +22,11 @@ let rec formatSpan (ctx:FormattingContext) = function
 | EmbedSpans cmd -> formatSpans ctx (cmd.Render())
 | Literal str -> ctx.Writer.Write(str)
 | HardLineBreak -> ctx.Writer.Write(Environment.NewLine)
+| IndirectLink(body, _, key) when key.StartsWith("^") ->
+  // footnote
+  ctx.Writer.Write("[")
+  formatSpans ctx body 
+  ctx.Writer.Write("]")
 | IndirectLink(body, _, Html.LookupKey ctx.Links (link, title)) 
 | DirectLink(body, (link, title)) ->
   ctx.Writer.Write("[")
@@ -142,6 +147,14 @@ and formatParagraphs ctx paragraphs =
   let bigCtx = { ctx with LineBreak = bigBreak ctx }
   for last, paragraph in paragraphs |> Seq.mapi (fun i v -> (i = length - 1), v) do
     formatParagraph (if last then smallCtx else bigCtx) paragraph
+  let footnotes =
+    ctx.Links
+    |> Seq.filter (fun (KeyValue(k, _)) -> k.StartsWith("^"))
+  if not <| Seq.isEmpty footnotes then ctx.Writer.Write(ctx.Newline)
+  footnotes
+  |> Seq.iter (fun (KeyValue(k, (v, _))) ->
+    fprintfn ctx.Writer "[%s]: %s" k v
+  )
 
 let formatMarkdown writer newline links =
   {

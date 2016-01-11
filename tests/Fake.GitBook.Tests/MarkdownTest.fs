@@ -190,6 +190,19 @@ A_{m,n} =
     do! assertEquals quoteList <| builder.ToString()
   }
 
+  let footnote = """[^1]
+
+[^1]: footnote
+"""
+
+  let `` parse and format footnote`` = test {
+    let doc = Literate.ParseMarkdownString(footnote)
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine doc.DefinedLinks doc.Paragraphs
+    do! assertEquals footnote <| builder.ToString()
+  }
+
   let `` parse and format script`` = test {
     let markdown = (paragraphs, list) ||> sprintf """%s
 ```fsharp
