@@ -1,8 +1,8 @@
 {
-  "name": "sample-book",
+  "name": "FAKE.GitBook",
   "private": true,
   "version": "1.0.0",
-  "description": "gitbook sample",
+  "description": "FAKE.GitBook documentation",
   "repository": {
     "type": "git",
     "url": "http://github.com/pocketberserker/FAKE.GitBook"
