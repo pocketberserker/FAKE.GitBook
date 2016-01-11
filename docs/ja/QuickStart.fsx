@@ -3,7 +3,6 @@
 // it to define helpers that you do not want to show in the documentation.
 #r @"../../packages/FAKE/tools/FakeLib.dll"
 #I @"../../bin/Fake.GitBook"
-open Fake
 
 (**
 
@@ -64,6 +63,8 @@ nuget Npm.js // if you don't install npm
 ターゲットを定義します。
 
 *)
+
+open Fake
 
 Target "Generate" (fun _ ->
   GitBook id id [Html]

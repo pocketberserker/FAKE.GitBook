@@ -3,7 +3,6 @@
 // it to define helpers that you do not want to show in the documentation.
 #r @"../../packages/FAKE/tools/FakeLib.dll"
 #I @"../../bin/Fake.GitBook"
-open Fake
 
 (**
 
@@ -63,6 +62,8 @@ Create a `build.fsx` file in your project's root and write codes to load librari
 And define a target.
 
 *)
+
+open Fake
 
 Target "Generate" (fun _ ->
   GitBook id id [Html]
