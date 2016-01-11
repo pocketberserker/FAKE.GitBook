@@ -28,6 +28,7 @@ type GitBookParams = {
   SrcDir: string
   CompiledSrcDir: string
   BookBuildDir: string
+  GenerateTips: bool
   FsiEvaluator: IFsiEvaluator option
 }
 
@@ -41,6 +42,7 @@ let GitBookDefaults () = {
   SrcDir = currentDirectory @@ "src"
   CompiledSrcDir = defaultBookBuilderDir
   BookBuildDir = defaultBookBuilderDir
+  GenerateTips = true
   FsiEvaluator = Some(FsiEvaluator() :> IFsiEvaluator)
 }
 
@@ -74,6 +76,6 @@ let GitBook setNpmParams setParams formats =
       })
   let parameters = setParams <| GitBookDefaults ()
   match parameters.FsiEvaluator with
-  | Some fsi -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir, fsi)
-  | None -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir)
+  | Some fsi -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir, parameters.GenerateTips, fsi)
+  | None -> GitBook.Generate(parameters.SrcDir, parameters.CompiledSrcDir, parameters.GenerateTips)
   GitBookOnly setParams formats

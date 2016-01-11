@@ -70,10 +70,41 @@ let b = "b"
 """
 
   let `` parse and format code`` = test {
-    let doc = Literate.ParseMarkdownString(code) |> GitBook.Transformations.replaceLiterateParagraphs
+    let doc = Literate.ParseMarkdownString(code) |> GitBook.Transformations.replaceLiterateParagraphs false
     let builder = StringBuilder()
     use writer = new StringWriter(builder)
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    do! assertEquals code <| builder.ToString()
+  }
+
+  let `` parse and format code with tips`` = test {
+    let code = """```fsharp
+let a = "a"
+
+let b () = "b"
+
+let rec c n =
+  if n = 0 then 0
+  else c (n - 1)
+```
+"""
+    let doc = Literate.ParseMarkdownString(code) |> GitBook.Transformations.replaceLiterateParagraphs true
+    let builder = StringBuilder()
+    use writer = new StringWriter(builder)
+    let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
+    let code = """```fsharp
+// val a : string
+let a = "a"
+
+// val b : unit -> string
+let b () = "b"
+
+// val c : n:int -> int
+let rec c n =
+  if n = 0 then 0
+  else c (n - 1)
+```
+"""
     do! assertEquals code <| builder.ToString()
   }
 
@@ -167,7 +198,7 @@ let b = "b"
 %s
 *)
 """
-    let doc = Literate.ParseScriptString(script) |> GitBook.Transformations.replaceLiterateParagraphs
+    let doc = Literate.ParseScriptString(script) |> GitBook.Transformations.replaceLiterateParagraphs false
     let builder = StringBuilder()
     use writer = new StringWriter(builder)
     let actual = GitBook.Markdown.formatMarkdown writer Environment.NewLine (dict []) doc.Paragraphs
