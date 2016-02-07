@@ -7,7 +7,17 @@ open Persimmon
 open UseTestNameByReflection
 open FSharp.Literate
 
+module Helper =
+  
+  open System.Text.RegularExpressions
+
+  let assertEquals expected actual =
+     let replace str = Regex.Replace(str, @"\r\n?|\n", System.Environment.NewLine)
+     assertEquals (replace expected) (replace actual)
+
 module MarkdownTest =
+
+  open Helper
 
   let horizontalRule = """# Foo
 
