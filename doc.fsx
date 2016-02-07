@@ -1,4 +1,4 @@
-#r @"packages/FAKE/tools/FakeLib.dll"
+#r @"packages/build/FAKE/tools/FakeLib.dll"
 #I @"bin/Fake.GitBook"
 #r @"bin/Fake.GitBook/Fake.GitBook.dll"
 #load @"./Project.fsx"

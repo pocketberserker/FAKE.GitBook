@@ -11,8 +11,7 @@ skip_commits:
 
 clone_depth: 50
 
-configuration:
-  - Release
+test: off
 
 cache:
   - packages -> paket.lock

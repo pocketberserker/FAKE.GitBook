@@ -1,5 +1,5 @@
-#r @"packages/FAKE/tools/FakeLib.dll"
-#r @"packages/FAKE.Persimmon/lib/net451/FAKE.Persimmon.dll"
+#r @"packages/build/FAKE/tools/FakeLib.dll"
+#r @"packages/build/FAKE.Persimmon/lib/net451/FAKE.Persimmon.dll"
 #load @"./Project.fsx"
 open Fake
 open Fake.Git
@@ -124,7 +124,7 @@ Target "PublishNuget" (fun _ ->
 )
 
 
-#load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
+#load "paket-files/build/fsharp/FAKE/modules/Octokit/Octokit.fsx"
 open Octokit
 
 Target "Release" (fun _ ->

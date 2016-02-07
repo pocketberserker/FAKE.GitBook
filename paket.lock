@@ -1,17 +1,23 @@
 NUGET
   remote: http://api.nuget.org/v3/index.json
   specs:
-    FAKE (4.12.0)
-    FAKE.Lib (4.12.0)
+    FAKE.Lib (4.20.0) - framework: >= net451
+    FSharp.Compiler.Service (2.0.0.4)
+    FSharp.Core (4.0.0.1)
+    FSharp.Formatting (2.14.0)
+      FSharp.Compiler.Service (>= 2.0.0.3 < 2.1.0)
+      FSharpVSPowerTools.Core (>= 2.3.0 < 2.4.0)
+    FSharpVSPowerTools.Core (2.3.0)
+      FSharp.Compiler.Service (>= 2.0.0.3)
+
+GROUP Build
+NUGET
+  remote: http://api.nuget.org/v3/index.json
+  specs:
+    FAKE (4.20.0)
+    FAKE.Lib (4.20.0)
     FAKE.Persimmon (1.0.2)
       FAKE.Lib (>= 4.1.0)
-    FSharp.Compiler.Service (1.4.2.3)
-    FSharp.Core (4.0.0.1)
-    FSharp.Formatting (2.13.0)
-      FSharp.Compiler.Service (>= 1.4.2 < 1.5.0)
-      FSharpVSPowerTools.Core (>= 2.2.0 < 2.3.0)
-    FSharpVSPowerTools.Core (2.2.0)
-      FSharp.Compiler.Service (>= 1.4.2)
     Microsoft.Bcl (1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.21) - import_targets: false
@@ -22,12 +28,16 @@ NUGET
     Npm.js (2.13.1)
       Node.js (>= 0.12.7)
     Nuget.CommandLine (3.3.0)
-    Octokit (0.17.0)
+    Octokit (0.18.0)
       Microsoft.Net.Http
-    Persimmon (1.0.1)
-    Persimmon.Console (1.0.1)
+    Persimmon.Console (1.0.2)
 GITHUB
   remote: fsharp/FAKE
   specs:
-    modules/Octokit/Octokit.fsx (7d1a6f8e48d1e2e1e3246ea24a4de05cccc8ce64)
+    modules/Octokit/Octokit.fsx (43c4800c5f132d2c2d6832a3a59232a64d83d4c0)
       Octokit
+GROUP Test
+NUGET
+  remote: http://api.nuget.org/v3/index.json
+  specs:
+    Persimmon (1.0.2)

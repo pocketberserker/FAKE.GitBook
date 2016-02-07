@@ -27,5 +27,5 @@ then
   mozroots --import --sync --quiet
 fi
 
-run packages/FAKE/tools/FAKE.exe "$@" $FSIARGS doc.fsx
+run packages/build/FAKE/tools/FAKE.exe "$@" $FSIARGS doc.fsx
 

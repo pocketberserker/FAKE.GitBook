@@ -1,7 +1,7 @@
 (*** hide ***)
 // This block of code is omitted in the generated HTML documentation. Use
 // it to define helpers that you do not want to show in the documentation.
-#r @"../../packages/FAKE/tools/FakeLib.dll"
+#r @"../../packages/build/FAKE/tools/FakeLib.dll"
 #I @"../../bin/Fake.GitBook"
 
 (**
@@ -18,12 +18,12 @@ FAKE.GitBookを使うことで、[FSharp.Formatting][fhsarp-formatting]スタイ
 `npm`をインストールしていない場合は、`Npm.js`を依存関係に追加する必要があります。
 
 ```
-source https://api.nuget.org/v3/index.json
-source https://nuget.org/api/v2
+group Build
+  source https://api.nuget.org/v3/index.json
 
-nuget FAKE
-nuget FAKE.GitBook
-nuget Npm.js // if you don't install npm
+  nuget FAKE
+  nuget FAKE.GitBook
+  nuget Npm.js // if you don't install npm
 ```
 
 [Paket - Getting Started][paket-getting-started]を参考に、依存関係をインストールしてください。
@@ -54,11 +54,11 @@ nuget Npm.js // if you don't install npm
 まず、ライブラリをロードします。
 
 ```fsharp
-#r @"packages/FAKE/tools/FakeLib.dll"
-#I "packages/FSharp.Formatting/lib/net40"
-#I "packages/FSharp.Compiler.Service/lib/net40"
-#I "packages/FSharpVSPowerTools.Core/lib/net45"
-#r @"packages/FAKE.GitBook/lib/net451/Fake.GitBook.dll"
+#r @"packages/build/FAKE/tools/FakeLib.dll"
+#I @"packages/build/FSharp.Formatting/lib/net40"
+#I @"packages/build/FSharp.Compiler.Service/lib/net40"
+#I @"packages/build/FSharpVSPowerTools.Core/lib/net45"
+#r @"packages/build/FAKE.GitBook/lib/net451/Fake.GitBook.dll"
 ```
 ターゲットを定義します。
 
@@ -100,7 +100,7 @@ FSharp.Formattingスタイルでドキュメントを書いてください。
 次のコマンドを実行してください。
 
     [lang=powershell]
-    packages\FAKE\tools\Fake.exe build.fsx
+    packages\build\FAKE\tools\Fake.exe build.fsx
 
 ## サンプルプロジェクト
 
@@ -113,4 +113,3 @@ FSharp.Formattingスタイルでドキュメントを書いてください。
 [fake-getting-started]: http://fsharp.github.io/FAKE/gettingstarted.html
 
 *)
-

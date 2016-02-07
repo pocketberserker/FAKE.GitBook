@@ -1,7 +1,7 @@
 (*** hide ***)
 // This block of code is omitted in the generated HTML documentation. Use
 // it to define helpers that you do not want to show in the documentation.
-#r @"../../packages/FAKE/tools/FakeLib.dll"
+#r @"../../build/packages/FAKE/tools/FakeLib.dll"
 #I @"../../bin/Fake.GitBook"
 
 (**
@@ -18,12 +18,12 @@ Create a `paket.dependencies` file in your project's root and specify some depen
 If you don't install `npm`, you need to add `Npm.js` depencencies。
 
 ```
-source https://api.nuget.org/v3/index.json
-source https://nuget.org/api/v2
+group Build
+  source https://api.nuget.org/v3/index.json
 
-nuget FAKE
-nuget FAKE.GitBook
-nuget Npm.js // if you don't install npm
+  nuget FAKE
+  nuget FAKE.GitBook
+  nuget Npm.js // if you don't install npm
 ```
 
 Install dependencies referring to [Paket - Getting Started][paket-getting-started].
@@ -53,11 +53,11 @@ Create a `package.json` file in your project's root.
 Create a `build.fsx` file in your project's root and write codes to load libraries.
 
 ```fsharp
-#r @"packages/FAKE/tools/FakeLib.dll"
-#I "packages/FSharp.Formatting/lib/net40"
-#I "packages/FSharp.Compiler.Service/lib/net40"
-#I "packages/FSharpVSPowerTools.Core/lib/net45"
-#r @"packages/FAKE.GitBook/lib/net451/Fake.GitBook.dll"
+#r @"packages/build/FAKE/tools/FakeLib.dll"
+#I @"packages/build/FSharp.Formatting/lib/net40"
+#I @"packages/build/FSharp.Compiler.Service/lib/net40"
+#I @"packages/build/FSharpVSPowerTools.Core/lib/net45"
+#r @"packages/build/FAKE.GitBook/lib/net451/Fake.GitBook.dll"
 ```
 And define a target.
 
@@ -98,7 +98,7 @@ Write some documents using FSharp.Formatting style.
 Run the command below:
 
     [lang=powershell]
-    packages\FAKE\tools\Fake.exe build.fsx
+    packages\build\FAKE\tools\Fake.exe build.fsx
 
 ## Sample porject
 
@@ -111,4 +111,3 @@ See also [FAKE.GitBook.Sample](https://github.com/pocketberserker/FAKE.GitBook.S
 [fake-getting-started]: http://fsharp.github.io/FAKE/gettingstarted.html
 
 *)
-

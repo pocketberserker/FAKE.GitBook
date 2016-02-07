@@ -1,37 +1,45 @@
 #!/usr/bin/env bash
-
-set -eu
-set -o pipefail
-
-cd `dirname $0`
-
-FSIARGS=""
-OS=${OS:-"unknown"}
-if [[ "$OS" != "Windows_NT" ]]
+if test "$OS" = "Windows_NT"
 then
-  FSIARGS="--fsiargs -d:MONO"
-fi
+  # use .Net
 
-function run() {
-  if [[ "$OS" != "Windows_NT" ]]
-  then
-    mono "$@"
-  else
-    "$@"
+  .paket/paket.bootstrapper.exe prerelease
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+  	exit $exit_code
   fi
-}
 
-run .paket/paket.bootstrapper.exe
+  .paket/paket.exe restore
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+  	exit $exit_code
+  fi
 
-if [[ "$OS" != "Windows_NT" ]] &&
-       [ ! -e ~/.config/.mono/certs ]
-then
-  mozroots --import --sync --quiet
+  packages/build/FAKE/tools/FAKE.exe $@ --fsiargs -d:MONO build.fsx
+else
+  # use mono
+  mono .paket/paket.bootstrapper.exe prerelease
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    certificate_count=$(certmgr -list -c Trust | grep X.509 | wc -l)
+    if [ $certificate_count -le 1 ]; then
+      echo "Couldn't download Paket. This might be because your Mono installation"
+      echo "doesn't have the right SSL root certificates installed. One way"
+      echo "to fix this would be to download the list of SSL root certificates"
+      echo "from the Mozilla project by running the following command:"
+      echo ""
+      echo "    mozroots --import --sync"
+      echo ""
+      echo "This will import over 100 SSL root certificates into your Mono"
+      echo "certificate repository. Then try running the build script again."
+    fi
+  	exit $exit_code
+  fi
+
+  mono .paket/paket.exe restore
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+  	exit $exit_code
+  fi
+  mono packages/build/FAKE/tools/FAKE.exe $@ --fsiargs -d:MONO build.fsx
 fi
-
-run .paket/paket.exe restore
-
-[ ! -e build.fsx ] && run .paket/paket.exe update
-[ ! -e build.fsx ] && run packages/FAKE/tools/FAKE.exe init.fsx
-run packages/FAKE/tools/FAKE.exe "$@" $FSIARGS build.fsx
-
